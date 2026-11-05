@@ -1,0 +1,325 @@
+{
+  "name": "QuickCart workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -960,
+        -592
+      ],
+      "id": "73b0ab74-a4ce-43ae-bb7f-d874da884020",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "16u2D_BsVlgj0AEnCZIA5lTWEYRt-UTzaBRHhBfocJds",
+          "mode": "list",
+          "cachedResultName": "QuickCart (Responses)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/16u2D_BsVlgj0AEnCZIA5lTWEYRt-UTzaBRHhBfocJds/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1704415311,
+          "mode": "list",
+          "cachedResultName": "Form responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/16u2D_BsVlgj0AEnCZIA5lTWEYRt-UTzaBRHhBfocJds/edit#gid=1704415311"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -736,
+        -592
+      ],
+      "id": "12781881-2d1a-4d21-b9a6-a04e96925c2a",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ejEixwMdFP4HEyNH",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json['Issue Category'] }}",
+                    "rightValue": "Payment Issues",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "c226202e-0fcf-4d19-8973-bb88911913bd"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Payment Issues"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "8cf2f837-7b6c-4468-aca9-5392d553a8c3",
+                    "leftValue": "={{ $json['Issue Category'] }}",
+                    "rightValue": "Delivery Issues",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Delivery Issues"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "6d1a9282-3a8c-48e4-95fd-25414bcfc7cb",
+                    "leftValue": "={{ $json['Issue Category'] }}",
+                    "rightValue": "Technical issues",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Technical issues"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "93b36ffa-8111-444d-ab2e-5434da904162",
+                    "leftValue": "={{ $json['Issue Category'] }}",
+                    "rightValue": "General Issues",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "General Issues"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -512,
+        -592
+      ],
+      "id": "6e5679f0-72fe-4b71-a147-d2844c9d53b2",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json['Email:-  '] }}",
+        "subject": "Payment Issues",
+        "message": "<div style=\"font-family: Arial, sans-serif; padding: 20px; background:#fef9f3; border-radius: 10px;\">\n  <h2 style=\"color:#d97706;\">💳 We've received your Payment concern!</h2>\n  <p>Hi  👋,</p>\n  <p>Thanks for reaching out to <b>QuickCart Support</b>. Our payments team has been notified and is on it! ✅</p>\n  <p>📩 We'll get back to you within <b>24 hours</b> with an update.</p>\n  <p>Thanks for your patience 🙏<br><b>Team QuickCart</b> 🛒</p>\n</div>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -384,
+        -784
+      ],
+      "id": "1c44743b-74ba-431c-b81d-db4fed5ca19c",
+      "name": "Email for Payment Issues",
+      "webhookId": "64a0f59e-0930-47b6-81b9-1ffe0bb80549",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "mL7nqFGBCLD1NGxZ",
+          "name": "Gmail account 270"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json['Email:-  '] }}",
+        "subject": "Delivery Issues",
+        "message": "<div style=\"font-family: Arial, sans-serif; padding: 20px; background:#f0f9ff; border-radius: 10px;\">\n  <h2 style=\"color:#0284c7;\">🚚 Your Delivery Issue has been logged!</h2>\n  <p>Hi  👋,</p>\n  <p>We're sorry for the delivery trouble! 😞 Our logistics team is checking your order right now. 📦</p>\n  <p>✅ Ticket received &nbsp;|&nbsp; ⏳ Update within 24 hrs</p>\n  <p>Thanks for bearing with us 💙<br><b>Team QuickCart</b> 🛒</p>\n</div>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -224,
+        -704
+      ],
+      "id": "1d76892e-f910-4cd2-8908-f50635cad24b",
+      "name": "Email for Delivery Issues",
+      "webhookId": "51a2b526-14a5-4927-b521-6a65af0551d0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "mL7nqFGBCLD1NGxZ",
+          "name": "Gmail account 270"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json['Email:-  '] }}",
+        "subject": "Technical Issues",
+        "message": "<div style=\"font-family: Arial, sans-serif; padding: 20px; background:#f5f3ff; border-radius: 10px;\">\n  <h2 style=\"color:#7c3aed;\">🛠️ Technical Issue Received!</h2>\n  <p>Hi  👋,</p>\n  <p>Our tech team has picked up your ticket 💻 and is investigating the glitch. 🔍</p>\n  <p>✅ Logged &nbsp;|&nbsp; 🔧 Fix in progress</p>\n  <p>We'll be in touch soon!<br><b>Team QuickCart</b> 🛒</p>\n</div>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -128,
+        -528
+      ],
+      "id": "3aff28bc-a43c-4e46-ac62-78fdf4e4b576",
+      "name": "Email for Technical issues",
+      "webhookId": "a2775092-18d5-47b0-8d20-f6ffe7da0e1e",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "mL7nqFGBCLD1NGxZ",
+          "name": "Gmail account 270"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json['Email:-  '] }}",
+        "subject": "General Issues",
+        "message": "<div style=\"font-family: Arial, sans-serif; padding: 20px; background:#f0fdf4; border-radius: 10px;\">\n  <h2 style=\"color:#16a34a;\">💬 Thanks for reaching out!</h2>\n  <p>Hi  👋,</p>\n  <p>We've received your message and our support team will review it shortly. ✅</p>\n  <p>We appreciate you shopping with us 🛍️<br><b>Team QuickCart</b> 🛒</p>\n</div>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -304,
+        -336
+      ],
+      "id": "13e13d2c-9f04-4f26-b39a-0797ade359ba",
+      "name": "Email for General Issues",
+      "webhookId": "24945aa1-4078-4079-b428-dbe5ef7ee719",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "mL7nqFGBCLD1NGxZ",
+          "name": "Gmail account 270"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Email for Payment Issues",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Email for Delivery Issues",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Email for Technical issues",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Email for General Issues",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "413e9a92-baa0-49c3-a9aa-2927d2636ee5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0db25aff814d9d346b0e6d897946122cfc12e064b6e58ff53ffd8c9cc948ff20"
+  },
+  "nodeGroups": [],
+  "id": "fsd3C2SzwymHlRWK",
+  "tags": []
+}
